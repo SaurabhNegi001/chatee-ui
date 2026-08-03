@@ -2,21 +2,40 @@ import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import type { AppDispatch, RootState } from "../store/store";
-import { openConversation, searchUsers } from "../store/chatSlice";
+import {
+    conversationClosed,
+    fetchRecentConversations,
+    openConversation,
+    searchUsers,
+} from "../store/chatSlice";
 import { emitSendMessage } from "../api/socket";
 import type { SearchResult } from "../types/chat";
 
 export function useChat() {
     const dispatch = useDispatch<AppDispatch>();
-    const { searchResults, searchStatus, activeConversation, messages, messagesStatus } =
-        useSelector((state: RootState) => state.chat);
+    const {
+        searchResults,
+        searchStatus,
+        recentConversations,
+        recentStatus,
+        activeConversation,
+        messages,
+        messagesStatus,
+    } = useSelector((state: RootState) => state.chat);
 
     const search = useCallback((query: string) => dispatch(searchUsers(query)), [dispatch]);
+
+    const loadRecentConversations = useCallback(
+        () => dispatch(fetchRecentConversations()),
+        [dispatch],
+    );
 
     const openChat = useCallback(
         (user: SearchResult) => dispatch(openConversation(user)),
         [dispatch],
     );
+
+    const closeChat = useCallback(() => dispatch(conversationClosed()), [dispatch]);
 
     const sendMessage = useCallback(
         (content: string) => {
@@ -29,11 +48,15 @@ export function useChat() {
     return {
         searchResults,
         searchStatus,
+        recentConversations,
+        recentStatus,
         activeConversation,
         messages,
         messagesStatus,
         search,
+        loadRecentConversations,
         openChat,
+        closeChat,
         sendMessage,
     };
 }

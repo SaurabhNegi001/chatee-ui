@@ -6,7 +6,7 @@ import styles from "../../pages/home/ChatLayout.module.css";
 
 const ConversationView = () => {
     const { user } = useAuth();
-    const { activeConversation, messages, messagesStatus, sendMessage } = useChat();
+    const { activeConversation, messages, messagesStatus, sendMessage, closeChat } = useChat();
     const [draft, setDraft] = useState("");
     const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -34,10 +34,17 @@ const ConversationView = () => {
     return (
         <div className={styles.conversation}>
             <div className={styles.conversationHeader}>
-                <span className={styles.conversationUsername}>{activeConversation.username}</span>
-                <span className={styles.conversationMobile}>
-                    +{activeConversation.countryCode} {activeConversation.mobile}
-                </span>
+                <button
+                    type="button"
+                    className={styles.backButton}
+                    onClick={closeChat}
+                    aria-label="Back to search"
+                >
+                    ←
+                </button>
+                <div className={styles.conversationHeaderText}>
+                    <span className={styles.conversationUsername}>{activeConversation.username}</span>
+                </div>
             </div>
 
             <div className={styles.messageList}>

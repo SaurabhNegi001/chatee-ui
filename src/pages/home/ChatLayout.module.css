@@ -2,6 +2,7 @@
     display: flex;
     height: 100vh;
     background: var(--background);
+    overflow: hidden;
 }
 
 .sidebar {
@@ -11,6 +12,7 @@
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
+    min-height: 0;
 }
 
 .sidebarHeader {
@@ -53,7 +55,7 @@
     padding: 12px;
     border: 1px solid var(--border);
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 16px;
     outline: none;
 }
 
@@ -89,14 +91,44 @@
     border-left: 3px solid var(--primary);
 }
 
+.resultTopRow {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
 .resultUsername {
     font-weight: 600;
     color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.resultMobile {
+.unreadBadge {
+    flex-shrink: 0;
+    background: var(--primary);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.resultPreview {
     font-size: 12px;
     color: var(--text-secondary);
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .hint {
@@ -118,6 +150,8 @@
     align-items: center;
     justify-content: center;
     color: var(--text-secondary);
+    text-align: center;
+    padding: 20px;
 }
 
 .conversation {
@@ -125,24 +159,44 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
+    min-height: 0;
 }
 
 .conversationHeader {
-    padding: 16px 20px;
+    padding: 12px 20px;
     border-bottom: 1px solid var(--border);
     background: var(--card);
     display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.conversationHeaderText {
+    display: flex;
     flex-direction: column;
+    min-width: 0;
+}
+
+.backButton {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 20px;
+    line-height: 1;
+    padding: 4px 8px;
+    margin-left: -8px;
+    cursor: pointer;
+    color: var(--text-primary);
+    flex-shrink: 0;
 }
 
 .conversationUsername {
     font-weight: 600;
     color: var(--text-primary);
-}
-
-.conversationMobile {
-    font-size: 12px;
-    color: var(--text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .messageList {
@@ -179,17 +233,19 @@
 .messageForm {
     display: flex;
     gap: 10px;
-    padding: 16px 20px;
+    padding: 12px 16px;
     border-top: 1px solid var(--border);
     background: var(--card);
+    flex-shrink: 0;
 }
 
 .messageInput {
     flex: 1;
+    min-width: 0;
     padding: 12px 14px;
     border: 1px solid var(--border);
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 16px;
     outline: none;
 }
 
@@ -205,15 +261,35 @@
     color: white;
     cursor: pointer;
     font-size: 14px;
+    flex-shrink: 0;
 }
 
 .sendButton:hover {
     background: var(--primary-dark);
 }
 
+/*
+ * Mobile: only one pane at a time (like a real chat app), not both panes
+ * squeezed side by side. `.chatOpen` is toggled on `.page` from Home.tsx
+ * based on whether a conversation is currently open.
+ */
 @media (max-width: 768px) {
-    .sidebar {
-        width: 240px;
+    .sidebar,
+    .main {
+        width: 100%;
+    }
+
+    .page.chatOpen .sidebar {
+        display: none;
+    }
+
+    .page:not(.chatOpen) .main {
+        display: none;
+    }
+
+    .backButton {
+        display: inline-flex;
+        align-items: center;
     }
 
     .bubble {

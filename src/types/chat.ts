@@ -9,6 +9,15 @@ export interface ChatMessage {
 export interface SearchResult {
     id: string;
     username: string;
-    mobile: number;
-    countryCode: number;
+}
+
+export interface RecentConversation {
+    conversationId: string;
+    user: SearchResult;
+    lastMessage: {
+        content: string;
+        senderId: string;
+        createdAt: string;
+    };
+    unreadCount: number;
 }
